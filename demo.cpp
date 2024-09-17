@@ -1,4 +1,5 @@
 #include <iostream>
+#include <span>
 
 #include <hidapi.h>
 
@@ -11,12 +12,19 @@ void panic(std::wstring_view msg)
     exit(1);
 }
 
+void send_data(hid_device* handle, std::span<unsigned char> buf)
+{
+    int res = hid_write(handle, buf.data(), buf.size());
+    if (res < 0) panic(hid_error(handle));
+    std::wcout << L"Written bytes: " << res << L'\n';
+}
+
 int main(int argc, char* argv[])
 {
     int res;
     unsigned char buf[65];
     wchar_t wstr[kMaxStrDescLen];
-    hid_device *handle;
+    hid_device* handle;
     int i;
 
     res = hid_init();
@@ -40,8 +48,27 @@ int main(int argc, char* argv[])
     if (res < 0) panic(hid_error(handle));
 
     std::wcout << L"Received bytes: " << res << L'\n';
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 16; i++)
         std::wcout << L"buf[" << i << L"]: " << static_cast<int>(buf[i]) << L'\n';
+    
+    if (res == 32) {
+        // Write back.
+        send_data(handle, {buf, 32});
+
+        // Write short.
+        send_data(handle, {buf, 31});
+
+        // Write single byte.
+        send_data(handle, {buf, 1});
+
+        // Write corrupted.
+        buf[1] = 'x';
+        send_data(handle, {buf, 32});
+
+        // Write wrong report.
+        buf[0] = 42;
+        send_data(handle, {buf, 32});
+    }
 
     hid_close(handle);
 
