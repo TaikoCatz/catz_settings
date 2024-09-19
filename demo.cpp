@@ -12,11 +12,14 @@ void panic(std::wstring_view msg)
     exit(1);
 }
 
-void send_data(hid_device* handle, std::span<unsigned char> buf)
+void send_feature(hid_device* handle, std::span<unsigned char> buf)
 {
-    int res = hid_write(handle, buf.data(), buf.size());
-    if (res < 0) panic(hid_error(handle));
-    std::wcout << L"Written bytes: " << res << L'\n';
+    int res = hid_send_feature_report(handle, buf.data(), buf.size());
+    if (res < 0) {
+        std::wcerr << L"Error: " << hid_error(handle) << L'\n';
+    } else {
+        std::wcout << L"Written bytes: " << res << L'\n';
+    }
 }
 
 int main(int argc, char* argv[])
@@ -44,30 +47,34 @@ int main(int argc, char* argv[])
     if (res < 0) panic(hid_error(handle));
     std::wcout << L"Serial Number String: " << wstr << L'\n';
 
-    res = hid_read(handle, buf, 64);
+    buf[0] = 0x01;
+    res = hid_get_feature_report(handle, buf, 32);
     if (res < 0) panic(hid_error(handle));
 
     std::wcout << L"Received bytes: " << res << L'\n';
     for (i = 0; i < 16; i++)
         std::wcout << L"buf[" << i << L"]: " << static_cast<int>(buf[i]) << L'\n';
-    
-    if (res == 32) {
-        // Write back.
-        send_data(handle, {buf, 32});
 
+    if (res == 32) {
         // Write short.
-        send_data(handle, {buf, 31});
+        send_feature(handle, {buf, 31});
 
         // Write single byte.
-        send_data(handle, {buf, 1});
+        send_feature(handle, {buf, 1});
 
+        auto recover = buf[1];
         // Write corrupted.
         buf[1] = 'x';
-        send_data(handle, {buf, 32});
+        send_feature(handle, {buf, 32});
 
         // Write wrong report.
         buf[0] = 42;
-        send_data(handle, {buf, 32});
+        send_feature(handle, {buf, 32});
+
+        // Write back.
+        buf[0] = 0x01;
+        buf[1] = recover;
+        send_feature(handle, {buf, 32});
     }
 
     hid_close(handle);
