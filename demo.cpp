@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
     if (res == 32) {
         // Write short.
-        send_feature(handle, {buf, 31});
+        send_feature(handle, {buf, 20});
 
         // Write single byte.
         send_feature(handle, {buf, 1});
