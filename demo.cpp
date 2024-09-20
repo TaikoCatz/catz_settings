@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     std::wcout << L"Serial Number String: " << wstr << L'\n';
 
     buf[0] = 0x01;
-    res = hid_get_feature_report(handle, buf, 32);
+    res = hid_get_feature_report(handle, buf, 64);
     if (res < 0) panic(hid_error(handle));
 
     std::wcout << L"Received bytes: " << res << L'\n';
