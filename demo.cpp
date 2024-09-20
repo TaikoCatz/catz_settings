@@ -1,5 +1,8 @@
+#include <chrono>
+#include <format>
 #include <iostream>
 #include <span>
+#include <thread>
 
 #include <hidapi.h>
 
@@ -27,12 +30,10 @@ int main(int argc, char* argv[])
     int res;
     unsigned char buf[65];
     wchar_t wstr[kMaxStrDescLen];
-    hid_device* handle;
-    int i;
 
     res = hid_init();
 
-    handle = hid_open(0x16c0, 0x27d9, nullptr);
+    hid_device* handle = hid_open(0x16c0, 0x27d9, nullptr);
     if (!handle) panic(hid_error(nullptr));
 
     res = hid_get_manufacturer_string(handle, wstr, kMaxStrDescLen);
@@ -52,8 +53,9 @@ int main(int argc, char* argv[])
     if (res < 0) panic(hid_error(handle));
 
     std::wcout << L"Received bytes: " << res << L'\n';
-    for (i = 0; i < 16; i++)
-        std::wcout << L"buf[" << i << L"]: " << static_cast<int>(buf[i]) << L'\n';
+    for (int i = 0; i < res; i++) {
+        std::wcout << std::format(L"{:02x}{}", buf[i], i == res - 1 ? L'\n' : L' ');
+    }
 
     if (res == 32) {
         // Write short.
@@ -75,6 +77,19 @@ int main(int argc, char* argv[])
         buf[0] = 0x01;
         buf[1] = recover;
         send_feature(handle, {buf, 32});
+    }
+
+    // Continue get status.
+    for (int i = 0; i < 25; ++i) {
+        res = hid_get_feature_report(handle, buf, 32);
+        if (res < 0) panic(hid_error(handle));
+
+        std::wcout << L"Received bytes: " << res << L'\n';
+        for (int i = 0; i < res; i++) {
+            std::wcout << std::format(L"{:02x}{}", buf[i], i == res - 1 ? L'\n' : L' ');
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     hid_close(handle);
