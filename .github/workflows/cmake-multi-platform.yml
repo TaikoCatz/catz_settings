@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
 
+    env:
+      WINDOWS_WX_VERSION: v3.2.6
+
     strategy:
       fail-fast: false
       matrix:
@@ -48,17 +51,58 @@ jobs:
       run: |
         brew install wxwidgets
 
-    - name: Install dependencies on Windows
+    # Building wxWidgets on Windows is very expensive. Cache it.
+    - name: Restore wxWidgets on Windows
       if: matrix.os == 'windows-latest'
+      id: cache-wx
+      uses: actions/cache/restore@v4
+      with:
+        path: wxWidgets/_install
+        key: windows-wx-${{ env.WINDOWS_WX_VERSION }}
+
+    # Checkout wxWidgets and build from source on Windows.
+    - name: Checkout wxWidgets on Windows
+      uses: actions/checkout@v4
+      if: matrix.os == 'windows-latest' && steps.cache-wx.outputs.cache-hit != 'true'
+      with:
+        repository: wxWidgets/wxWidgets
+        ref: ${{ env.WINDOWS_WX_VERSION }}
+        path: wxWidgets
+        submodules: recursive
+
+    - name: Build wxWidgets on Windows
+      if: matrix.os == 'windows-latest' && steps.cache-wx.outputs.cache-hit != 'true'
       run: |
-        choco install wxwidgets
+        cd wxWidgets
+        mkdir _build
+        cmake -DwxUSE_EXCEPTIONS=OFF -DwxUSE_NO_RTTI=ON -DwxBUILD_SHARED=OFF -DwxBUILD_SAMPLES=OFF -DwxBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=_install -S . -B _build
+        cmake --build _build --config Release --target install
+
+    - name: Save wxWidgets on Windows
+      if: matrix.os == 'windows-latest'
+      uses: actions/cache/save@v4
+      with:
+        path: wxWidgets/_install
+        key: windows-wx-${{ env.WINDOWS_WX_VERSION }}
 
     - name: Configure CMake
+      if: matrix.os != 'windows-latest'
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
+
+    # Windows needs passing wxWidgets library path.
+    - name: Configure CMake (Windows)
+      if: matrix.os == 'windows-latest'
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DwxWidgets_ROOT_DIR=${{ github.workspace }}/wxWidgets/_install
         -S ${{ github.workspace }}
 
     - name: Build
