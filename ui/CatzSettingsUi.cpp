@@ -218,6 +218,10 @@ SelectDeviceDialog::SelectDeviceDialog( wxWindow* parent, wxWindowID id, const w
 	this->Layout();
 
 	this->Centre( wxBOTH );
+
+	// Connect Events
+	m_button_refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SelectDeviceDialog::handleBtnRefresh ), NULL, this );
+	m_button_choose->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SelectDeviceDialog::handleBtnChoose ), NULL, this );
 }
 
 SelectDeviceDialog::~SelectDeviceDialog()
