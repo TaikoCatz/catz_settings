@@ -17,6 +17,7 @@ include(${wxWidgets_USE_FILE})
 add_executable(catz_settings
     dongle.cpp
     main.cpp
+    settings.cpp
     ui/CatzSettingsUi.cpp
 )
 target_link_libraries(catz_settings PRIVATE

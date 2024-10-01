@@ -76,6 +76,10 @@ public:
         std::optional<DongleHidInfo> dongle_info;
 		auto* select_device_dialog = new SelectDeviceDialogImpl(this, dongle_info);
 		select_device_dialog->ShowModal();
+
+        if (dongle_info) {
+            handleDeviceSelected(*dongle_info);
+        }
 	}
 
     void handleBtnHelp(wxCommandEvent& event) override
@@ -83,6 +87,23 @@ public:
         auto* help_dialog = new HelpDialog(this);
         help_dialog->ShowModal();
     }
+
+private:
+    void handleDeviceSelected(const DongleHidInfo& dongle_info) {
+        dongle_.reset();
+        dongle_.emplace(dongle_info.path);
+
+        auto state = dongle_->state();
+        if (state == Dongle::kOk) {
+            wxMessageBox("Device state is OK.", "Success", wxICON_INFORMATION);
+        } else if (state == Dongle::kCorrupted) {
+            wxMessageBox("Device reports its stored setting is corrupted. Saving a new setting may fix it.", "Info", wxICON_INFORMATION);
+        } else {
+            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+        }
+    }
+
+    std::optional<Dongle> dongle_;
 };
 
 class MyApp final : public wxApp
