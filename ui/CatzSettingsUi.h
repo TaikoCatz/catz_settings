@@ -30,6 +30,7 @@
 #include <wx/frame.h>
 #include <wx/listbox.h>
 #include <wx/dialog.h>
+#include <wx/hyperlink.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +65,7 @@ class MainWindow : public wxFrame
 		wxStatusBar* m_statusBar1;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void handleBtnHelp( wxCommandEvent& event ) { event.Skip(); }
 		virtual void handleBtnSelectDevice( wxCommandEvent& event ) { event.Skip(); }
 
 
@@ -93,6 +95,29 @@ class SelectDeviceDialog : public wxDialog
 		SelectDeviceDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,360 ), long style = wxDEFAULT_DIALOG_STYLE );
 
 		~SelectDeviceDialog();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class HelpDialog
+///////////////////////////////////////////////////////////////////////////////
+class HelpDialog : public wxDialog
+{
+	private:
+
+	protected:
+		wxStaticText* m_staticText9;
+		wxStaticText* m_staticText27;
+		wxHyperlinkCtrl* m_hyperlink1;
+		wxStaticText* m_staticText91;
+		wxStaticText* m_staticText911;
+		wxStaticText* m_staticText9111;
+
+	public:
+
+		HelpDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Help"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 480,320 ), long style = wxDEFAULT_DIALOG_STYLE );
+
+		~HelpDialog();
 
 };
 

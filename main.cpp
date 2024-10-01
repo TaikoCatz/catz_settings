@@ -20,6 +20,12 @@ public:
 		auto* select_device_dialog = new SelectDeviceDialogImpl(this);
 		select_device_dialog->ShowModal();
 	}
+
+    void handleBtnHelp(wxCommandEvent& event) override
+    {
+        auto* help_dialog = new HelpDialog(this);
+        help_dialog->ShowModal();
+    }
 };
 
 class MyApp final : public wxApp

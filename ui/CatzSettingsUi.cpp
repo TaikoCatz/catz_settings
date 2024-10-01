@@ -176,6 +176,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	m_button_help->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnHelp ), NULL, this );
 	m_button_seldev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnSelectDevice ), NULL, this );
 }
 
@@ -220,5 +221,66 @@ SelectDeviceDialog::SelectDeviceDialog( wxWindow* parent, wxWindowID id, const w
 }
 
 SelectDeviceDialog::~SelectDeviceDialog()
+{
+}
+
+HelpDialog::HelpDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
+
+
+	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText9 = new wxStaticText( this, wxID_ANY, _("TaikoCatz I/O Dongle v4 Settings Tool"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText9->Wrap( -1 );
+	m_staticText9->SetFont( wxFont( 18, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Helvetica") ) );
+
+	bSizer11->Add( m_staticText9, 0, wxALL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer26;
+	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+
+
+	bSizer26->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText27 = new wxStaticText( this, wxID_ANY, _("Help and more info:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText27->Wrap( -1 );
+	bSizer26->Add( m_staticText27, 0, wxALL, 5 );
+
+	m_hyperlink1 = new wxHyperlinkCtrl( this, wxID_ANY, _("taikocatz.com"), wxT("https://taikocatz.com"), wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_CENTRE|wxHL_DEFAULT_STYLE );
+	bSizer26->Add( m_hyperlink1, 0, wxALL, 5 );
+
+
+	bSizer26->Add( 0, 0, 1, wxEXPAND, 5 );
+
+
+	bSizer11->Add( bSizer26, 0, wxEXPAND, 5 );
+
+
+	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText91 = new wxStaticText( this, wxID_ANY, _("Copyright (c) 2024 Zheng Lyu"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText91->Wrap( -1 );
+	bSizer11->Add( m_staticText91, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText911 = new wxStaticText( this, wxID_ANY, _("The TaikoCatz logo is a registered trademark in China,"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText911->Wrap( -1 );
+	bSizer11->Add( m_staticText911, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText9111 = new wxStaticText( this, wxID_ANY, _("owned by TaikoCatz team."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText9111->Wrap( -1 );
+	bSizer11->Add( m_staticText9111, 0, wxALL|wxEXPAND, 5 );
+
+
+	this->SetSizer( bSizer11 );
+	this->Layout();
+
+	this->Centre( wxBOTH );
+}
+
+HelpDialog::~HelpDialog()
 {
 }
