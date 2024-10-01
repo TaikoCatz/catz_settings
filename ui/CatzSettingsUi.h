@@ -20,6 +20,7 @@
 #include <wx/slider.h>
 #include <wx/choice.h>
 #include <wx/statbox.h>
+#include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/bitmap.h>
@@ -28,6 +29,7 @@
 #include <wx/statusbr.h>
 #include <wx/frame.h>
 #include <wx/listbox.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -49,6 +51,7 @@ class MainWindow : public wxFrame
 		wxSlider* m_slider_rk;
 		wxStaticText* m_staticText131;
 		wxChoice* m_choice_overall_sensi;
+		wxStaticLine* m_staticline1;
 		wxChoice* m_choice_drumroll;
 		wxCheckBox* m_keypress_dur_override;
 		wxSlider* m_slider_keypress;
@@ -73,9 +76,9 @@ class MainWindow : public wxFrame
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class SelectDeviceWindow
+/// Class SelectDeviceDialog
 ///////////////////////////////////////////////////////////////////////////////
-class SelectDeviceWindow : public wxFrame
+class SelectDeviceDialog : public wxDialog
 {
 	private:
 
@@ -87,9 +90,9 @@ class SelectDeviceWindow : public wxFrame
 
 	public:
 
-		SelectDeviceWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Select device"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 240,360 ), long style = wxCAPTION|wxCLOSE_BOX|wxSTAY_ON_TOP|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
+		SelectDeviceDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,360 ), long style = wxDEFAULT_DIALOG_STYLE );
 
-		~SelectDeviceWindow();
+		~SelectDeviceDialog();
 
 };
 

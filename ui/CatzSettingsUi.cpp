@@ -25,19 +25,19 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText1 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("←Katsu"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText1 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("<Katsu"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText1->Wrap( -1 );
 	bSizer4->Add( m_staticText1, 1, wxALL, 5 );
 
-	m_staticText11 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("←Don"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText11 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("<Don"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText11->Wrap( -1 );
 	bSizer4->Add( m_staticText11, 1, wxALL, 5 );
 
-	m_staticText12 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("Don→"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText12 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("Don>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText12->Wrap( -1 );
 	bSizer4->Add( m_staticText12, 1, wxALL, 5 );
 
-	m_staticText13 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("Katsu→"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText13 = new wxStaticText( sbSizer4->GetStaticBox(), wxID_ANY, _("Katsu>"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText13->Wrap( -1 );
 	bSizer4->Add( m_staticText13, 1, wxALL, 5 );
 
@@ -84,6 +84,9 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer1->Add( sbSizer4, 0, wxEXPAND, 5 );
 
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer1->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 
@@ -93,7 +96,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxStaticBoxSizer* sbSizer3;
 	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( sbSizer5->GetStaticBox(), wxID_ANY, _("Drum-roll level") ), wxVERTICAL );
 
-	wxString m_choice_drumrollChoices[] = { _("Fallback (Reliability↑↑, Roll↓↓, press 16ms)"), _("Level 1 (Reliability↑, Roll↓, press 16ms)"), _("Level 2 (Balanced, press 10ms)"), _("Level 3 (Reliability↓, Roll↑, press 8ms)"), _("Level 4 (Reliability↓↓, Roll↑↑, press 6ms)") };
+	wxString m_choice_drumrollChoices[] = { _("Fallback (Reliability++, Roll--, press 16ms)"), _("Level 1 (Reliability+, Roll-, press 16ms)"), _("Level 2 (Balanced, press 10ms)"), _("Level 3 (Reliability-, Roll+, press 8ms)"), _("Level 4 (Reliability--, Roll++, press 6ms)") };
 	int m_choice_drumrollNChoices = sizeof( m_choice_drumrollChoices ) / sizeof( wxString );
 	m_choice_drumroll = new wxChoice( sbSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice_drumrollNChoices, m_choice_drumrollChoices, 0 );
 	m_choice_drumroll->SetSelection( 2 );
@@ -180,7 +183,7 @@ MainWindow::~MainWindow()
 {
 }
 
-SelectDeviceWindow::SelectDeviceWindow( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+SelectDeviceDialog::SelectDeviceDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -216,6 +219,6 @@ SelectDeviceWindow::SelectDeviceWindow( wxWindow* parent, wxWindowID id, const w
 	this->Centre( wxBOTH );
 }
 
-SelectDeviceWindow::~SelectDeviceWindow()
+SelectDeviceDialog::~SelectDeviceDialog()
 {
 }

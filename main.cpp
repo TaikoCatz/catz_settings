@@ -6,26 +6,23 @@
 
 #include "ui/CatzSettingsUi.h"
 
-class SelectDeviceWindowImpl : public SelectDeviceWindow {
+class SelectDeviceDialogImpl final : public SelectDeviceDialog {
 public:
-	SelectDeviceWindowImpl(wxWindow* parent) : SelectDeviceWindow(parent) {}
-
-private:
-	wxWindowDisabler disable_parent_{this};
+	SelectDeviceDialogImpl(wxWindow* parent) : SelectDeviceDialog(parent) {}
 };
 
-class MainWindowImpl : public MainWindow {
+class MainWindowImpl final : public MainWindow {
 public:
 	MainWindowImpl() : MainWindow(nullptr) {}
 
 	void handleBtnSelectDevice(wxCommandEvent& event) override
 	{
-		auto* select_device_window = new SelectDeviceWindowImpl(this);
-		select_device_window->Show(true);
+		auto* select_device_dialog = new SelectDeviceDialogImpl(this);
+		select_device_dialog->ShowModal();
 	}
 };
 
-class MyApp : public wxApp
+class MyApp final : public wxApp
 {
 public:
     bool OnInit() override {
