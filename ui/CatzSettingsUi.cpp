@@ -69,7 +69,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_staticText131->Wrap( -1 );
 	bSizer5->Add( m_staticText131, 0, wxALL, 5 );
 
-	wxString m_choice_overall_sensiChoices[] = { _("Low (0.7x)"), _("Medium (1.0x)"), _("High (1.4x)"), _("Extreme (2.0x)") };
+	wxString m_choice_overall_sensiChoices[] = { _("Low (0.7x)"), _("Medium (1.0x)"), _("High (1.4x)"), _("Very HIgh (2.0x)"), _("Extreme (2.8x)") };
 	int m_choice_overall_sensiNChoices = sizeof( m_choice_overall_sensiChoices ) / sizeof( wxString );
 	m_choice_overall_sensi = new wxChoice( sbSizer4->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice_overall_sensiNChoices, m_choice_overall_sensiChoices, 0 );
 	m_choice_overall_sensi->SetSelection( 1 );
