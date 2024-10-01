@@ -17,9 +17,6 @@ endif()
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include(${wxWidgets_USE_FILE})
 
-add_executable(catz_settings_demo demo.cpp)
-target_link_libraries(catz_settings_demo PRIVATE hidapi::hidapi)
-
 add_executable(catz_settings
     main.cpp
     ui/CatzSettingsUi.cpp
