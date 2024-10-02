@@ -84,18 +84,26 @@ public:
     }
 
     void handleBtnSave(wxCommandEvent& event) override {
+        setSaveButtonEnabled(false);
+        setStatusBarStatus(L"Saving settings to dongle...");
+
         auto settings = uiToSettings();
         dongle_->sendSettings(settings);
 
         auto state = dongle_->state();
-        if (state == Dongle::kOk || state == Dongle::kCorrupted) {
-            // Error: device does not seem to respond to the set settings request.
-            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+        if (state == Dongle::kRebooting) {
+            wxMessageBox("Settings saved. Device is rebooting.", "Info", wxICON_INFORMATION);
+            setStatusBarStatus(L"Saved...");
+            // Now select another device.
+            doSelectDeviceDialog();
             return;
+        } else if (state == Dongle::kInternalError) {
+            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+            handleDeviceSelected(std::nullopt);
+        } else {
+            // Should not reach here.
+            wxCHECK(false, );
         }
-
-        // Wait for device to save and reboot.
-        waitSaveReboot();
     }
 
     void handleDurOverrideCheckbox(wxCommandEvent& event) override {
@@ -147,12 +155,8 @@ private:
             setStatusBarStatus(L"Corrupted settings.");
         } else {
             wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+            handleDeviceSelected(std::nullopt);
         }
-    }
-
-    void waitSaveReboot() {
-        setSaveButtonEnabled(false);
-        setStatusBarStatus(L"Saving settings to dongle...");
     }
 
     void setSaveButtonEnabled(bool enabled) {

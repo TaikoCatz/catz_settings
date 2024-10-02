@@ -50,9 +50,6 @@ public:
     Dongle(std::string_view path);
     ~Dongle();
 
-    // Read a new feature report from the dongle, update the state.
-    void readFeatureReport();
-
     // Send settings to the dongle. Read the response and update the state.
     // Settings must be valid.
     void sendSettings(const Settings& settings);
@@ -60,19 +57,23 @@ public:
     // Get the current state.
     State state() const { return state_; }
 
-    // Get log messages.
+    // Get log messages or error.
     std::wstring getLog() const { return log_.str(); }
+    std::wstring getErrorMsg() const { return error_msg_; }
 
     // Get settings. Call this only in kOk state.
     Settings getSettings() const { return settings_; }
 
 private:
+    std::vector<unsigned char> readFeatureReport();
+    void readAndProcessFeatureReport();
     void processFeatureReport(std::span<const unsigned char> feature);
     void processInitialRead(std::span<const unsigned char> feature);
 
     hid_device* device_ = nullptr;
     State state_ = kInitFail;
     std::wostringstream log_;
+    std::wstring error_msg_ = L"Success.";
 
     Settings settings_;
 };

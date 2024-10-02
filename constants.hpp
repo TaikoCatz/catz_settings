@@ -2,6 +2,7 @@
 #define CATZ_SETTINGS_CONSTANTS_HPP
 
 #include <cstdint>
+#include <chrono>
 
 namespace catz {
 
@@ -41,6 +42,8 @@ constexpr unsigned char kWriteSuccessPayload[] = {
     0x03, 0xff,
     0x00, 0x00, 0x00, 0x00,
 };
+
+constexpr auto kSendSettingsTimeout = std::chrono::milliseconds{1000};
 
 }  // namespace catz
 
