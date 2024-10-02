@@ -10,7 +10,7 @@ namespace catz {
 
 struct Settings {
     int sensitivity[4] = { 16, 16, 16, 16 };  // 8-16.
-    int overall_sensitivity = 1;  // 1-5.
+    int overall_sensitivity = 2;  // 1-5.
 
     int drumroll_level = 2;  // 0-4.
     int keypress_duration = 0;  // 2-30, or 0 for use default.
