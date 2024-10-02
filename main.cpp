@@ -94,7 +94,7 @@ public:
         if (state == Dongle::kRebooting) {
             wxMessageBox("Settings saved. Device is rebooting.", "Info", wxICON_INFORMATION);
             wxMessageBox(L"Debug log:\n" + dongle_->getLog(), "Debug log", wxICON_INFORMATION);
-            setStatusBarStatus(L"Saved...");
+            setStatusBarStatus(L"Saved.");
             // Now select another device.
             doSelectDeviceDialog();
             return;
