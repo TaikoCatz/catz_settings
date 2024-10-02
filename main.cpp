@@ -84,6 +84,21 @@ public:
         help_dialog->ShowModal();
     }
 
+    void handleBtnSave(wxCommandEvent& event) override {
+        auto settings = uiToSettings();
+        dongle_->sendSettings(settings);
+
+        auto state = dongle_->state();
+        if (state == Dongle::kOk || state == Dongle::kCorrupted) {
+            // Error: device does not seem to respond to the set settings request.
+            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+            return;
+        }
+
+        // Wait for device to save and reboot.
+        waitSaveReboot();
+    }
+
     void handleDurOverrideCheckbox(wxCommandEvent& event) override {
         uiUpdate();
     }
@@ -111,7 +126,8 @@ private:
         setSaveButtonEnabled(false);
 
         if (!dongle_info) {
-            m_statusBar->SetStatusText(L"No device selected.", 0);
+            setStatusBarDevice(L"");
+            setStatusBarStatus(L"No device selected.");
             return;
         }
 
@@ -122,19 +138,34 @@ private:
         if (state == Dongle::kOk) {
             settingsToUi(dongle_->getSettings());
             setSaveButtonEnabled(true);
-            m_statusBar->SetStatusText(dongle_info->serial + L" (settings loaded)", 0);
+            setStatusBarDevice(dongle_info->serial);
+            setStatusBarStatus(L"Settings loaded.");
         } else if (state == Dongle::kCorrupted) {
             wxMessageBox("Device reports its stored setting is corrupted. Saving a new setting may fix it.", "Info", wxICON_INFORMATION);
             settingsToUi(Settings{});  // Default settings.
             setSaveButtonEnabled(true);
-            m_statusBar->SetStatusText(dongle_info->serial + L" (corrupted)", 0);
+            setStatusBarDevice(dongle_info->serial);
+            setStatusBarStatus(L"Corrupted settings.");
         } else {
             wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
         }
     }
 
+    void waitSaveReboot() {
+        setSaveButtonEnabled(false);
+        setStatusBarStatus(L"Saving settings to dongle...");
+    }
+
     void setSaveButtonEnabled(bool enabled) {
         m_button_save->Enable(enabled);
+    }
+
+    void setStatusBarDevice(const auto& serial) {
+        m_statusBar->SetStatusText(serial, 1);
+        setStatusBarStatus(L"");
+    }
+    void setStatusBarStatus(const auto& status) {
+        m_statusBar->SetStatusText(status, 0);
     }
 
     void settingsToUi(const Settings& settings) {
@@ -158,6 +189,28 @@ private:
         m_choice_keyboard->SetSelection(settings.keyboard_altkey);
 
         uiUpdate();
+    }
+
+    Settings uiToSettings() {
+        Settings settings;
+
+        settings.overall_sensitivity = m_choice_overall_sensi->GetSelection() + 1;
+        settings.sensitivity[0] = m_slider_lk->GetValue();
+        settings.sensitivity[1] = m_slider_ld->GetValue();
+        settings.sensitivity[2] = m_slider_rd->GetValue();
+        settings.sensitivity[3] = m_slider_rk->GetValue();
+
+        settings.drumroll_level = m_choice_drumroll->GetSelection();
+        if (m_check_keypress_dur_default->IsChecked()) {
+            settings.keypress_duration = 0;
+        } else {
+            settings.keypress_duration = m_slider_keypress->GetValue();
+        }
+
+        settings.keyboard_altkey = m_choice_keyboard->GetSelection();
+
+        assert(settings.isValid());
+        return settings;
     }
 
     void uiUpdate() {

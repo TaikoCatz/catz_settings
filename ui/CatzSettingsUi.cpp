@@ -172,7 +172,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
-	m_statusBar = this->CreateStatusBar( 1, wxSTB_SIZEGRIP, wxID_ANY );
+	m_statusBar = this->CreateStatusBar( 3, wxSTB_SIZEGRIP, wxID_ANY );
 
 	this->Centre( wxBOTH );
 
@@ -190,6 +190,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_slider_keypress->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
 	m_button_help->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnHelp ), NULL, this );
 	m_button_seldev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnSelectDevice ), NULL, this );
+	m_button_save->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnSave ), NULL, this );
 }
 
 MainWindow::~MainWindow()

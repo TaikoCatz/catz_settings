@@ -70,6 +70,7 @@ class MainWindow : public wxFrame
 		virtual void handleSliderKeypressDur( wxScrollEvent& event ) { event.Skip(); }
 		virtual void handleBtnHelp( wxCommandEvent& event ) { event.Skip(); }
 		virtual void handleBtnSelectDevice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void handleBtnSave( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
