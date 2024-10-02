@@ -93,12 +93,14 @@ public:
         auto state = dongle_->state();
         if (state == Dongle::kRebooting) {
             wxMessageBox("Settings saved. Device is rebooting.", "Info", wxICON_INFORMATION);
+            wxMessageBox(L"Debug log:\n" + dongle_->getLog(), "Debug log", wxICON_INFORMATION);
             setStatusBarStatus(L"Saved...");
             // Now select another device.
             doSelectDeviceDialog();
             return;
         } else if (state == Dongle::kInternalError) {
-            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+            wxMessageBox(dongle_->getErrorMsg(), "Error", wxICON_ERROR);
+            wxMessageBox(L"Debug log:\n" + dongle_->getLog(), "Debug log", wxICON_INFORMATION);
             handleDeviceSelected(std::nullopt);
         } else {
             // Should not reach here.
@@ -131,6 +133,7 @@ private:
 
     void handleDeviceSelected(const std::optional<DongleHidInfo>& dongle_info) {
         setSaveButtonEnabled(false);
+        dongle_.reset();
 
         if (!dongle_info) {
             setStatusBarDevice(L"");
@@ -138,9 +141,7 @@ private:
             return;
         }
 
-        dongle_.reset();
         dongle_.emplace(dongle_info->path);
-
         auto state = dongle_->state();
         if (state == Dongle::kOk) {
             settingsToUi(dongle_->getSettings());
@@ -154,7 +155,8 @@ private:
             setStatusBarDevice(dongle_info->serial);
             setStatusBarStatus(L"Corrupted settings.");
         } else {
-            wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
+            wxMessageBox(dongle_->getErrorMsg(), "Error", wxICON_ERROR);
+            wxMessageBox(L"Debug log:\n" + dongle_->getLog(), "Debug log", wxICON_INFORMATION);
             handleDeviceSelected(std::nullopt);
         }
     }
