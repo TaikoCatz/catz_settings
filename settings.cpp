@@ -1,8 +1,9 @@
 #include "settings.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <expected>
+
+#include <wx/wx.h>
 
 #include "constants.hpp"
 
@@ -49,7 +50,7 @@ void writeLe(uint32_t value, std::span<unsigned char> data)
 
 std::vector<unsigned char> Settings::serialize() const
 {
-    assert(isValid());
+    wxCHECK(isValid(), {});
 
     std::vector<unsigned char> result(kSettingsPayloadSize, 0);
 

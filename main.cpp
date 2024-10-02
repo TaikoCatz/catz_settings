@@ -1,4 +1,3 @@
-#include <cassert>
 #include <cstdlib>
 #include <optional>
 
@@ -169,7 +168,7 @@ private:
     }
 
     void settingsToUi(const Settings& settings) {
-        assert(settings.isValid());
+        wxCHECK(settings.isValid(), );
 
         m_choice_overall_sensi->SetSelection(settings.overall_sensitivity - 1);
         m_slider_lk->SetValue(settings.sensitivity[0]);
@@ -209,7 +208,7 @@ private:
 
         settings.keyboard_altkey = m_choice_keyboard->GetSelection();
 
-        assert(settings.isValid());
+        wxCHECK(settings.isValid(), {});
         return settings;
     }
 
@@ -217,7 +216,7 @@ private:
         if (m_check_keypress_dur_default->IsChecked()) {
             m_slider_keypress->Disable();
             int level = m_choice_drumroll->GetSelection();
-            assert(level >= 0 && level < std::ssize(kDefaultKeypressDurationMsByLevel));
+            wxCHECK(level >= 0 && level < std::ssize(kDefaultKeypressDurationMsByLevel), );
             auto ms = kDefaultKeypressDurationMsByLevel[level];
             m_slider_keypress->SetValue(ms);
             m_text_keypress_ms->SetLabel(std::to_wstring(ms) + L"ms (default)");

@@ -100,7 +100,7 @@ void Dongle::readFeatureReport()
 
 void Dongle::sendSettings(const Settings& settings)
 {
-    assert(state_ == kCorrupted || state_ == kOk);
+    wxCHECK(state_ == kCorrupted || state_ == kOk, );
 
     // TODO: really send the settings.
 }
