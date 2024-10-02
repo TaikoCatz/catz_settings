@@ -9,6 +9,7 @@
 #include <locale.h>
 #endif  // _WIN32
 
+#include "constants.hpp"
 #include "dongle.hpp"
 #include "ui/CatzSettingsUi.h"
 
@@ -69,10 +70,14 @@ private:
 
 class MainWindowImpl final : public MainWindow {
 public:
-	MainWindowImpl() : MainWindow(nullptr) {}
+	MainWindowImpl() : MainWindow(nullptr) {
+        settingsToUi(Settings{});  // Default settings.
+        handleDeviceSelected(std::nullopt);
+    }
 
-	void handleBtnSelectDevice(wxCommandEvent& event) override
-	{
+	void handleBtnSelectDevice(wxCommandEvent& event) override {
+        setSaveButtonEnabled(false);
+
         std::optional<DongleHidInfo> dongle_info;
 		auto* select_device_dialog = new SelectDeviceDialogImpl(this, dongle_info);
 		select_device_dialog->ShowModal();
@@ -82,25 +87,90 @@ public:
         }
 	}
 
-    void handleBtnHelp(wxCommandEvent& event) override
-    {
+    void handleBtnHelp(wxCommandEvent& event) override {
         auto* help_dialog = new HelpDialog(this);
         help_dialog->ShowModal();
     }
 
+    void handleDurOverrideCheckbox(wxCommandEvent& event) override {
+        uiUpdate();
+    }
+
+    void handleChoiceLevel(wxCommandEvent& event) override {
+        uiUpdate();
+    }
+
+    void handleSliderKeypressDur(wxScrollEvent& event) override {
+        uiUpdate();
+    }
+
 private:
-    void handleDeviceSelected(const DongleHidInfo& dongle_info) {
+    void handleDeviceSelected(const std::optional<DongleHidInfo>& dongle_info) {
+        setSaveButtonEnabled(false);
+
+        if (!dongle_info) {
+            m_statusBar->SetStatusText(L"No device selected.", 0);
+            return;
+        }
+
         dongle_.reset();
-        dongle_.emplace(dongle_info.path);
+        dongle_.emplace(dongle_info->path);
 
         auto state = dongle_->state();
         if (state == Dongle::kOk) {
-            wxMessageBox("Device state is OK.", "Success", wxICON_INFORMATION);
+            settingsToUi(dongle_->getSettings());
+            setSaveButtonEnabled(true);
+            m_statusBar->SetStatusText(dongle_info->serial + L" (settings loaded)", 0);
         } else if (state == Dongle::kCorrupted) {
             wxMessageBox("Device reports its stored setting is corrupted. Saving a new setting may fix it.", "Info", wxICON_INFORMATION);
+            settingsToUi(Settings{});  // Default settings.
+            setSaveButtonEnabled(true);
+            m_statusBar->SetStatusText(dongle_info->serial + L" (corrupted)", 0);
         } else {
             wxMessageBox(dongle_->getLog(), "Error", wxICON_ERROR);
         }
+    }
+
+    void setSaveButtonEnabled(bool enabled) {
+        m_button_save->Enable(enabled);
+    }
+
+    void settingsToUi(const Settings& settings) {
+        assert(settings.isValid());
+
+        m_choice_overall_sensi->SetSelection(settings.overall_sensitivity - 1);
+        m_slider_lk->SetValue(settings.sensitivity[0]);
+        m_slider_ld->SetValue(settings.sensitivity[1]);
+        m_slider_rd->SetValue(settings.sensitivity[2]);
+        m_slider_rk->SetValue(settings.sensitivity[3]);
+
+        m_choice_drumroll->SetSelection(settings.drumroll_level);
+        if (settings.keypress_duration == 0) {
+            m_check_keypress_dur_default->SetValue(true);
+            m_slider_keypress->SetValue(kDefaultKeypressDurationMsByLevel[settings.drumroll_level]);
+        } else {
+            m_check_keypress_dur_default->SetValue(false);
+            m_slider_keypress->SetValue(settings.keypress_duration);
+        }
+
+        m_choice_keyboard->SetSelection(settings.keyboard_altkey);
+
+        uiUpdate();
+    }
+
+    void uiUpdate() {
+        if (m_check_keypress_dur_default->IsChecked()) {
+            m_slider_keypress->Disable();
+            int level = m_choice_drumroll->GetSelection();
+            assert(level >= 0 && level < std::ssize(kDefaultKeypressDurationMsByLevel));
+            auto ms = kDefaultKeypressDurationMsByLevel[level];
+            m_slider_keypress->SetValue(ms);
+            m_text_keypress_ms->SetLabel(std::to_wstring(ms) + L"ms (default)");
+        } else {
+            m_slider_keypress->Enable();
+            m_text_keypress_ms->SetLabel(std::to_wstring(m_slider_keypress->GetValue()) + L"ms (override)");
+        }
+        m_text_keypress_ms->GetContainingSizer()->Layout();
     }
 
     std::optional<Dongle> dongle_;

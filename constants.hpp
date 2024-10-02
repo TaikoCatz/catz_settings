@@ -9,7 +9,10 @@ constexpr uint16_t kVendorId = 0x16c0;
 constexpr uint16_t kProductId = 0x27d9;
 constexpr int kFeatureReportBufferSize = 64;
 constexpr int kFeatureReportId = 0x01;
-constexpr int kSettingsPayloadSize = 32;
+
+constexpr int kDefaultKeypressDurationMsByLevel[] = {
+    16, 16, 10, 8, 6,
+};
 
 constexpr unsigned char kMagic[] = {
     kFeatureReportId, 'S', 'd', 'T',

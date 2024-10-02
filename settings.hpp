@@ -20,7 +20,7 @@ struct Settings {
     bool isValid() const {
         if (overall_sensitivity < 1 || overall_sensitivity > 5) return false;
         if (drumroll_level < 0 || drumroll_level > 4) return false;
-        if (keypress_duration < 2 || keypress_duration > 30) return false;
+        if (keypress_duration != 0 && (keypress_duration < 2 || keypress_duration > 30)) return false;
         if (keyboard_altkey < 0 || keyboard_altkey > 1) return false;
         for (int i = 0; i < 4; ++i) {
             if (sensitivity[i] < 8 || sensitivity[i] > 16) return false;

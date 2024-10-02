@@ -54,7 +54,7 @@ class MainWindow : public wxFrame
 		wxChoice* m_choice_overall_sensi;
 		wxStaticLine* m_staticline1;
 		wxChoice* m_choice_drumroll;
-		wxCheckBox* m_keypress_dur_override;
+		wxCheckBox* m_check_keypress_dur_default;
 		wxSlider* m_slider_keypress;
 		wxStaticText* m_text_keypress_ms;
 		wxStaticText* m_staticText8;
@@ -62,9 +62,12 @@ class MainWindow : public wxFrame
 		wxButton* m_button_help;
 		wxButton* m_button_seldev;
 		wxButton* m_button_save;
-		wxStatusBar* m_statusBar1;
+		wxStatusBar* m_statusBar;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void handleChoiceLevel( wxCommandEvent& event ) { event.Skip(); }
+		virtual void handleDurOverrideCheckbox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void handleSliderKeypressDur( wxScrollEvent& event ) { event.Skip(); }
 		virtual void handleBtnHelp( wxCommandEvent& event ) { event.Skip(); }
 		virtual void handleBtnSelectDevice( wxCommandEvent& event ) { event.Skip(); }
 

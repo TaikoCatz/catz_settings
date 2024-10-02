@@ -108,11 +108,12 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxStaticBoxSizer* sbSizer41;
 	sbSizer41 = new wxStaticBoxSizer( new wxStaticBox( sbSizer5->GetStaticBox(), wxID_ANY, _("Key press duration (ms)") ), wxVERTICAL );
 
-	m_keypress_dur_override = new wxCheckBox( sbSizer41->GetStaticBox(), wxID_ANY, _("Use default duration by drum-roll level"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_keypress_dur_override->SetValue(true);
-	sbSizer41->Add( m_keypress_dur_override, 0, wxALL, 5 );
+	m_check_keypress_dur_default = new wxCheckBox( sbSizer41->GetStaticBox(), wxID_ANY, _("Use default duration by drum-roll level"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer41->Add( m_check_keypress_dur_default, 0, wxALL, 5 );
 
 	m_slider_keypress = new wxSlider( sbSizer41->GetStaticBox(), wxID_ANY, 10, 2, 30, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_HORIZONTAL );
+	m_slider_keypress->Enable( false );
+
 	sbSizer41->Add( m_slider_keypress, 0, wxALL|wxEXPAND, 5 );
 
 	m_text_keypress_ms = new wxStaticText( sbSizer41->GetStaticBox(), wxID_ANY, _("10ms"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
@@ -171,11 +172,22 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
-	m_statusBar1 = this->CreateStatusBar( 1, wxSTB_SIZEGRIP, wxID_ANY );
+	m_statusBar = this->CreateStatusBar( 1, wxSTB_SIZEGRIP, wxID_ANY );
 
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	m_choice_drumroll->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainWindow::handleChoiceLevel ), NULL, this );
+	m_check_keypress_dur_default->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainWindow::handleDurOverrideCheckbox ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
+	m_slider_keypress->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainWindow::handleSliderKeypressDur ), NULL, this );
 	m_button_help->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnHelp ), NULL, this );
 	m_button_seldev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainWindow::handleBtnSelectDevice ), NULL, this );
 }

@@ -63,6 +63,9 @@ public:
     // Get log messages.
     std::wstring getLog() const { return log_.str(); }
 
+    // Get settings. Call this only in kOk state.
+    Settings getSettings() const { return settings_; }
+
 private:
     void processFeatureReport(std::span<const unsigned char> feature);
     void processInitialRead(std::span<const unsigned char> feature);

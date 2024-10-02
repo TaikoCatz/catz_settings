@@ -159,7 +159,8 @@ void Dongle::processInitialRead(std::span<const unsigned char> feature)
     // OK, deserialize the settings.
     auto des = Settings::deserialize(feature);
     if (!des) {
-        log_ << L"Init: babble.\n";
+        log_ << L"Init: deser babble.\n";
+        log_ << L"Deser: " << des.error() << L"\n";
         return;
     }
 
