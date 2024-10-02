@@ -72,19 +72,11 @@ class MainWindowImpl final : public MainWindow {
 public:
 	MainWindowImpl() : MainWindow(nullptr) {
         settingsToUi(Settings{});  // Default settings.
-        handleDeviceSelected(std::nullopt);
+        doSelectDeviceDialog();  // Select the first device.
     }
 
 	void handleBtnSelectDevice(wxCommandEvent& event) override {
-        setSaveButtonEnabled(false);
-
-        std::optional<DongleHidInfo> dongle_info;
-		auto* select_device_dialog = new SelectDeviceDialogImpl(this, dongle_info);
-		select_device_dialog->ShowModal();
-
-        if (dongle_info) {
-            handleDeviceSelected(*dongle_info);
-        }
+        doSelectDeviceDialog();
 	}
 
     void handleBtnHelp(wxCommandEvent& event) override {
@@ -105,6 +97,16 @@ public:
     }
 
 private:
+    void doSelectDeviceDialog() {
+        setSaveButtonEnabled(false);
+
+        std::optional<DongleHidInfo> dongle_info;
+		auto* select_device_dialog = new SelectDeviceDialogImpl(this, dongle_info);
+		select_device_dialog->ShowModal();
+
+        handleDeviceSelected(dongle_info);
+    }
+
     void handleDeviceSelected(const std::optional<DongleHidInfo>& dongle_info) {
         setSaveButtonEnabled(false);
 
