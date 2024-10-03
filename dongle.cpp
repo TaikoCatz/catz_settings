@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <thread>
 
 #include <hidapi.h>
 #include <wx/wx.h>
@@ -119,6 +120,8 @@ void Dongle::sendSettings(const Settings& settings)
             if (!log_once_ongoing) {
                 log_ << L"Save: ongoing.\n";
                 log_once_ongoing = true;
+                // Refresh timeout the first time we see this.
+                timeout = std::chrono::steady_clock::now() + kSendSettingsTimeout;
             }
             // The only branch to continue.
         } else if (std::ranges::equal(response, kWriteSuccessPayload)) {
@@ -132,6 +135,8 @@ void Dongle::sendSettings(const Settings& settings)
             log_ << L"Save: babble, " << logifyPayload(response) << L"\n";
             break;
         }
+
+        std::this_thread::sleep_for(kSendSettingsPollInterval);
     }
 }
 

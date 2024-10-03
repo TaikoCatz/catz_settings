@@ -43,7 +43,8 @@ constexpr unsigned char kWriteSuccessPayload[] = {
     0x00, 0x00, 0x00, 0x00,
 };
 
-constexpr auto kSendSettingsTimeout = std::chrono::milliseconds{1000};
+constexpr auto kSendSettingsTimeout = std::chrono::milliseconds{1500};
+constexpr auto kSendSettingsPollInterval = std::chrono::milliseconds{100};
 
 }  // namespace catz
 

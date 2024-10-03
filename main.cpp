@@ -96,6 +96,7 @@ public:
             wxMessageBox(L"Debug log:\n" + dongle_->getLog(), "Debug log", wxICON_INFORMATION);
             setStatusBarStatus(L"Saved.");
             // Now select another device.
+            dongle_.reset();  // Release resource early.
             doSelectDeviceDialog();
             return;
         } else if (state == Dongle::kInternalError) {
