@@ -111,7 +111,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_check_keypress_dur_default = new wxCheckBox( sbSizer41->GetStaticBox(), wxID_ANY, _("Use default duration by drum-roll level"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer41->Add( m_check_keypress_dur_default, 0, wxALL, 5 );
 
-	m_slider_keypress = new wxSlider( sbSizer41->GetStaticBox(), wxID_ANY, 10, 2, 30, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_HORIZONTAL );
+	m_slider_keypress = new wxSlider( sbSizer41->GetStaticBox(), wxID_ANY, 10, 2, 35, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_HORIZONTAL );
 	m_slider_keypress->Enable( false );
 
 	sbSizer41->Add( m_slider_keypress, 0, wxALL|wxEXPAND, 5 );
@@ -172,7 +172,7 @@ MainWindow::MainWindow( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
-	m_statusBar = this->CreateStatusBar( 3, wxSTB_SIZEGRIP, wxID_ANY );
+	m_statusBar = this->CreateStatusBar( 2, wxSTB_SIZEGRIP, wxID_ANY );
 
 	this->Centre( wxBOTH );
 
