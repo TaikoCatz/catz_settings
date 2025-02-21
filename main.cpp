@@ -60,6 +60,7 @@ private:
 
     void enableSelection() {
         m_listBox_devices->Enable();
+        if (m_listBox_devices->GetCount() > 0) m_listBox_devices->SetSelection(0);
         m_button_choose->Enable();
     }
 
