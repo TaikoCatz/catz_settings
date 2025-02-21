@@ -119,6 +119,7 @@ class HelpDialog : public wxDialog
 		wxStaticText* m_staticText27;
 		wxHyperlinkCtrl* m_hyperlink1;
 		wxStaticText* m_staticText91;
+		wxStaticText* m_staticText912;
 		wxStaticText* m_staticText911;
 		wxStaticText* m_staticText9111;
 

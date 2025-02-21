@@ -279,9 +279,13 @@ HelpDialog::HelpDialog( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
 
-	m_staticText91 = new wxStaticText( this, wxID_ANY, _("Copyright (c) 2024 Zheng Lyu"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText91 = new wxStaticText( this, wxID_ANY, _("Copyright (c) 2024 Zheng Lyu. Released under the MIT License."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText91->Wrap( -1 );
 	bSizer11->Add( m_staticText91, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText912 = new wxStaticText( this, wxID_ANY, _(" For more information, visit the website above."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText912->Wrap( -1 );
+	bSizer11->Add( m_staticText912, 0, wxALL|wxEXPAND, 5 );
 
 	m_staticText911 = new wxStaticText( this, wxID_ANY, _("The TaikoCatz logo is a registered trademark in China,"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText911->Wrap( -1 );
