@@ -12,7 +12,7 @@ struct Settings {
     int sensitivity[4] = { 16, 16, 16, 16 };  // 8-16.
     int overall_sensitivity = 2;  // 1-5.
 
-    int drumroll_level = 2;  // 0-4.
+    int drumroll_level = 1;  // 0-4.
     int keypress_duration = 0;  // 2-35, or 0 for use default.
 
     int keyboard_altkey = 0;  // 0 = DF-JK, 1 = ZX-CV.
