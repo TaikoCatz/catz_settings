@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <optional>
+#include <string_view>
 
 #include <hidapi.h>
 #include <wx/wx.h>
@@ -34,7 +35,22 @@ public:
             return;
         }
 
+        std::wstring_view serial = dongles_[selection].serial;
+        constexpr std::wstring_view kPrefix = L"taikocatz.com:v4:";
+        if (!serial.starts_with(kPrefix)) {
+            wxMessageBox("Selected device is not a TaikoCatz dongle.", "Error", wxICON_ERROR);
+            return;
+        }
+
+        constexpr std::wstring_view kLatestVersion = L"taikocatz.com:v4:fw250420:";
+        if (serial.substr(0, std::min(serial.size(), kLatestVersion.size())) > kLatestVersion) {
+            wxMessageBox("This tool is an old version that does not support the new dongle firmware. Please download a new version of this tool.",
+                "Error", wxICON_ERROR);
+            return;
+        }
+
         dongle_hid_info_ = dongles_[selection];
+
         EndModal(wxID_OK);
     }
 
